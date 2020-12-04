@@ -50,7 +50,7 @@ def main (args):
   print()
   print('RMSE Performance: ' + str(np.round(rmse, 4)))
   print('Kích thước của file đầu ra: ', imputed_data_x.shape)
-  np.savetxt("data/imputed_data.csv",imputed_data_x, delimiter=',', , fmt='%d')
+  np.savetxt("data/imputed_data.csv",imputed_data_x, delimiter=',',  fmt='%d')
   print( 'Save results in Imputed_data.csv')
   
   return imputed_data_x, rmse
