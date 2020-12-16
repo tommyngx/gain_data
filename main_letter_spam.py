@@ -46,8 +46,15 @@ def main (args):
   
   # Report the RMSE performance
   rmse = rmse_loss (ori_data_x, imputed_data_x, data_m)
-  
   print()
+  mi_data = miss_data_x.astype(float)
+  no, dim = imputed_data_x.shape
+  miss_data = np.reshape(mi_data,(no,dim))
+  np.savetxt("data/missing_data.csv",mi_data,delimiter=',',fmt='%1.2f')
+  print( 'Shape of miss data: ',miss_data.shape)
+  print( 'Save results in missing_data.csv')
+  
+  #print()
   print('RMSE Performance: ' + str(np.round(rmse, 4)))
   print('Kích thước của file đầu ra: ', imputed_data_x.shape)
   np.savetxt("data/imputed_data.csv",imputed_data_x, delimiter=',',  fmt='%d')
