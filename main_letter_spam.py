@@ -12,6 +12,11 @@ import numpy as np
 from data_loader import data_loader
 from gain import gain
 from utils import rmse_loss
+from missingpy import MissForest
+from sklearn import metrics
+from math import sqrt
+from impyute.imputation.cs import mice
+import pandas as pd
 
 
 def main (args):
@@ -54,13 +59,29 @@ def main (args):
   print( 'Shape of miss data: ',miss_data.shape)
   print( 'Save results in missing_data.csv')
   
-  #print()
-  print('RMSE Performance: ' + str(np.round(rmse, 4)))
-  print('Kích thước của file đầu ra: ', imputed_data_x.shape)
+  print()
+  print('=== GAIN RMSE ===')
+  print('RMSE Performance: ' + str(np.round(rmse, 6)))
+  #print('Kích thước của file đầu ra: ', imputed_data_x.shape)
   np.savetxt("data/imputed_data.csv",imputed_data_x, delimiter=',',  fmt='%d')
   print( 'Save results in Imputed_data.csv')
   
+  # MissForest
+
+  print()
+  print('=== MissForest RMSE ===')
+  data = miss_data_x
+  imp_mean = MissForest(max_iter = 5)
+  miss_f = imp_mean.fit_transform(data)
+  #miss_f = pd.DataFrame(imputed_train_df)
+  rmse_MF = rmse_loss (ori_data_x, miss_f, data_m)
+  print('RMSE Performance: ' + str(np.round(rmse_MF, 6)))
+  np.savetxt("data/imputed_data_MF.csv",miss_f, delimiter=',',  fmt='%d')
+  print( 'Save results in Imputed_data_MF.csv')
+
+
   return imputed_data_x, rmse
+
 
 if __name__ == '__main__':  
   
