@@ -17,6 +17,8 @@ from sklearn import metrics
 from math import sqrt
 from impyute.imputation.cs import mice
 import pandas as pd
+from autoimpute.imputations import MiceImputer, SingleImputer, MultipleImputer
+from autoimpute.analysis import MiLinearRegression
 
 
 def main (args):
@@ -78,6 +80,25 @@ def main (args):
   print('RMSE Performance: ' + str(np.round(rmse_MF, 6)))
   np.savetxt("data/imputed_data_MF.csv",miss_f, delimiter=',',  fmt='%d')
   print( 'Save results in Imputed_data_MF.csv')
+
+  # MICE From Auto Impute
+  print()
+  print('=== MICE of Auto Impute RMSE ===')
+  data_mice = pd.DataFrame(miss_data_x)
+  mi = MiceImputer(k=1, imp_kwgs=None, n=1, predictors='all', return_list=True,
+        seed=None, strategy='default predictive', visit='default')
+  mice_out = mi.fit_transform(data_mice)
+  c = [list(x) for x in mice_out]
+  c1= c[0]
+  c2=c1[1]
+  c3=np.asarray(c2)
+  mice_x=c3
+  #print('here :', mice_x, miss_f, miss_f.shape)
+  rmse_MICE = rmse_loss (ori_data_x, mice_x, data_m)
+  print('=== MICE of Auto Impute RMSE ===')
+  print('RMSE Performance: ' + str(np.round(rmse_MICE, 6)))
+  np.savetxt("data/imputed_data_MICE.csv",mice_x, delimiter=',',  fmt='%d')
+  print( 'Save results in Imputed_data_MICE.csv')
 
 
   return imputed_data_x, rmse
